@@ -137,7 +137,7 @@ public class Field
         diffvectorx und y? Das steht in der main bei der Methode saveShips dabei.*/
         if (isAreaFree(x, y, length, dire))
         {
-            this.fleet.add(new Ship(x, y, length, dire, diffvectorx, diffvectory));
+            this.fleet.add(new Ship(new Position(x,y), length, dire, diffvectorx, diffvectory));
             return true;
         } else
         {

@@ -4,22 +4,21 @@ import java.util.ArrayList;
 
 public class Ship
 {
+    private final Position position;
     private ArrayList<ShipPart> shipparts = new ArrayList<>();
     private int length;
-    private int xCoordinate;
-    private int yCoordinate;
     private Direction direction;
     private int differenceVectorX;
     private int differenceVectorY;
 
     public int getxCoordinate()
     {
-        return xCoordinate;
+        return position.getX();
     }
 
     public int getyCoordinate()
     {
-        return yCoordinate;
+        return position.getY();
     }
 
     public int getDifferenceVectorX()
@@ -50,27 +49,27 @@ public class Ship
     /*ist das unterste Level vom Schiff erstellen. Wird in der Ship Methode aufgerufen. Dort bekommt es die
     Übergabeparameter und hier können dann die ShipParts zur ArrayList hinzugefügt werden. Kette geht bis zu main
     Methode saveShips hinauf.*/
-    private void generateShip(int x, int y, int length, Direction directions)
+    private void generateShipParts(Position position, int length, Direction directions)
     {
         for (int i = 0; i < length; i++)
         {
-            shipparts.add(new ShipPart(x, y));
+            shipparts.add(new ShipPart(position.getX(), position.getY()));
             switch (directions)
             {
                 case UP:
-                    y--;
+                    position.setY(position.getY() - 1);
                     break;
 
                 case RIGHT:
-                    x++;
+                    position.setX(position.getX() + 1);
                     break;
 
                 case LEFT:
-                    x--;
+                    position.setX(position.getX() - 1);
                     break;
 
                 case DOWN:
-                    y++;
+                    position.setY(position.getY() + 1);
                     break;
             }
 
@@ -81,19 +80,22 @@ public class Ship
      Also man muss mehrere Methoden "überstehen", um wirklich hier zu landen. Es wird dazwischen überprüft ob man
      setzen darf, ob Platz frei ist usw. Am Rande: Vergleichbar mit GUI am PC. Man macht was und es geht viele
      Schichten hinunter. */
-    public Ship(int xCoordinate, int yCoordinate, int length, Direction directions, int diffvectorx, int diffvectory)
+    public Ship(Position position,
+                int length,
+                Direction directions,
+                int diffvectorx,
+                int diffvectory)
     {
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
+        this.position = position;
         this.direction = directions;
         this.length = length;
         this.differenceVectorX = diffvectorx;
         this.differenceVectorY = diffvectory;
 
-        generateShip(xCoordinate, yCoordinate, length, directions);
+        generateShipParts(position, length, directions);
 
         /*Dient nur der Ausgabe für uns zum testen*/
-        System.out.println("ich generiere schiff an X= " + this.xCoordinate + " Y =" + this.yCoordinate + " richtung" + this.direction + " länge =" + this.length);
+        System.out.println("ich generiere schiff an X= " + this.getxCoordinate() + " Y =" + this.getyCoordinate() + " richtung" + this.direction + " länge =" + this.length);
     }
 
     /*Die Schleife geht jeden part vom Schiff durch. Die if Bedienung checkt für jeden part (das macht es bei jedem

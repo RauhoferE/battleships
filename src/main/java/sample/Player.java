@@ -141,7 +141,7 @@ public class Player
             } else
             {
                 AIsave = new ArrayList<>();
-                AIsave.add(new AIsave(x, y, false));
+                AIsave.add(new AIsave(x, y));
             }
         } else if (AIsave.get(0).getDirection() == null)
         {
@@ -174,7 +174,7 @@ public class Player
             this.SaveAttack(x, y);
             if (result)
             {
-                AIsave.add(new AIsave(x, y, direction, true));
+                AIsave.add(new AIsave(x, y, direction));
                 return true;
             } else
             {
@@ -205,7 +205,7 @@ public class Player
                 result = enemy.area.attack(x, y);
                 if (result)
                 {
-                    AIsave.add(new AIsave(x, y, AIsave.get(0).getDirection(), false));
+                    AIsave.add(new AIsave(x, y, AIsave.get(0).getDirection()));
                     return result;
                 } else
                 {
@@ -246,7 +246,7 @@ public class Player
                         a.setDirection(direction);
                         AIsave = new ArrayList<>();
                         AIsave.add(a);
-                        AIsave.add(new AIsave(x, y, direction, false));
+                        AIsave.add(new AIsave(x, y, direction));
                         return true;
                     } else
                     {

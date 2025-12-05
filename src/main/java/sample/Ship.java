@@ -53,7 +53,7 @@ public class Ship
     {
         for (int i = 0; i < length; i++)
         {
-            shipparts.add(new ShipPart(position.getX(), position.getY()));
+            shipparts.add(new ShipPart(position));
             switch (directions)
             {
                 case UP:

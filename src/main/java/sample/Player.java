@@ -1,9 +1,6 @@
 package sample;
 
-import javafx.geometry.Pos;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 //In der Klasse sind alle Eigenschaften, die ein Player hat
 public class Player
@@ -11,8 +8,6 @@ public class Player
     Field area = new Field();
 
     private ArrayList<Position> attackpositions = new ArrayList<>();
-
-    private ArrayList<AIsave> AIsave = null;
 
     /*SaveAttack speichert alle Attacken in die Arraylist*/
     public void SaveAttack(int x, int y)
@@ -38,13 +33,6 @@ public class Player
     public void Reset()
     {
         this.attackpositions = new ArrayList<>();
-    }
-
-    private boolean isHuman;
-
-    Player(boolean isHuman)
-    {
-        this.isHuman = isHuman;
     }
 
 }

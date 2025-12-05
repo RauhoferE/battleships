@@ -22,8 +22,8 @@ import java.io.File;
 
 public class Main extends Application
 {
-    private Player player1 = new Player(true);
-    private Player player2 = new Player(true);
+    private Player player1 = new Player();
+    private Player player2 = new Player();
     private double pressedX, pressedY;
     private int gameround = 1;
     private boolean shipscomplete = false; //zu testzwecken auf true später muss auf false gestellt werden

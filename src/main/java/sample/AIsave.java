@@ -36,19 +36,6 @@ public class AIsave
         this.water = water;
     }
 
-    public AIsave(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-
-    public AIsave(int x, int y, Direction direction)
-    {
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-    }
-
     public AIsave(int x, int y, boolean water)
     {
         this.x = x;

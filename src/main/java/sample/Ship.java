@@ -102,7 +102,7 @@ public class Ship
     Schleifendurchgang) ob die x und y Koordinate vom Part, das gerade in der For Schleife durchlaufen wird, den
     übergebenen x und y Koordinaten entspricht. (Die übergebenen, werden in der attack Methode in Field übergeben).
     Wenn es zutrifft, setzt es damage von dem Part auf true (das macht die destroy Methode in ShipPart)*/
-    public boolean attack(int x, int y)
+    public boolean attackPosition(int x, int y)
     {
         for (ShipPart shippart : this.shipparts)
         {

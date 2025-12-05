@@ -6,29 +6,30 @@ public class Ship
 {
     private ArrayList<ShipPart> shipparts = new ArrayList<>();
     private int length;
-    private int x;
-    private int y;
+    private int xCoordinate;
+    private int yCoordinate;
     private Direction direction;
-    private int divx, divy;
+    private int differenceVectorX;
+    private int differenceVectorY;
 
-    public int getX()
+    public int getxCoordinate()
     {
-        return x;
+        return xCoordinate;
     }
 
-    public int getY()
+    public int getyCoordinate()
     {
-        return y;
+        return yCoordinate;
     }
 
-    public int getDivx()
+    public int getDifferenceVectorX()
     {
-        return divx;
+        return differenceVectorX;
     }
 
-    public int getDivy()
+    public int getDifferenceVectorY()
     {
-        return divy;
+        return differenceVectorY;
     }
 
     public int getLength()
@@ -80,19 +81,19 @@ public class Ship
      Also man muss mehrere Methoden "überstehen", um wirklich hier zu landen. Es wird dazwischen überprüft ob man
      setzen darf, ob Platz frei ist usw. Am Rande: Vergleichbar mit GUI am PC. Man macht was und es geht viele
      Schichten hinunter. */
-    public Ship(int x, int y, int length, Direction directions, int diffvectorx, int diffvectory)
+    public Ship(int xCoordinate, int yCoordinate, int length, Direction directions, int diffvectorx, int diffvectory)
     {
-        this.x = x;
-        this.y = y;
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
         this.direction = directions;
         this.length = length;
-        this.divx = diffvectorx;
-        this.divy = diffvectory;
+        this.differenceVectorX = diffvectorx;
+        this.differenceVectorY = diffvectory;
 
-        generateShip(x, y, length, directions);
+        generateShip(xCoordinate, yCoordinate, length, directions);
 
         /*Dient nur der Ausgabe für uns zum testen*/
-        System.out.println("ich generiere schiff an X= " + this.x + " Y =" + this.y + " richtung" + this.direction + " länge =" + this.length);
+        System.out.println("ich generiere schiff an X= " + this.xCoordinate + " Y =" + this.yCoordinate + " richtung" + this.direction + " länge =" + this.length);
     }
 
     /*Die Schleife geht jeden part vom Schiff durch. Die if Bedienung checkt für jeden part (das macht es bei jedem

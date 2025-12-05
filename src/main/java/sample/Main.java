@@ -575,8 +575,8 @@ public class Main extends Application
 
             int x, y;
             //*40 um auf unsere Spielfeldkoordinaten zu kommen
-            x = ship.getX() * 40;
-            y = ship.getY() * 40;
+            x = ship.getxCoordinate() * 40;
+            y = ship.getyCoordinate() * 40;
             //Wird immer in das gegenüberliegende Feld gesetzt, deshalb stehen hier die Koordinaten vom Spieler 2
             if (player == player1)
             {
@@ -592,7 +592,7 @@ public class Main extends Application
             }
 
             /*Schiff kreiert und zum Battleshipcontainer dazugehaut und lock==true, um es nicht bewegbar zu machen*/
-            imageShipl = new ImageShip(x - ship.getDivx(), y - ship.getDivy(), ship.getLength(), image);
+            imageShipl = new ImageShip(x - ship.getDifferenceVectorX(), y - ship.getDifferenceVectorY(), ship.getLength(), image);
             battleshipcontainer.getChildren().add(imageShipl.getImageView());
             imageShipl.rotateTo(ship.getDirection());
             imageShipl.lock();

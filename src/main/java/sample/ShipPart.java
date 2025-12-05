@@ -36,9 +36,9 @@ public class ShipPart
     }
 
     /*Wird in der Ship klasse, in der attack Methode aufgerufen!*/
-    public void destroy()
+    public boolean isShipPartWithCoordinateDestroyed(int x, int y)
     {
-        this.receivedDamage = true;
+        return this.receivedDamage = x ==this.xCoordinate && y == this.yCoordinate;
     }
 
 }

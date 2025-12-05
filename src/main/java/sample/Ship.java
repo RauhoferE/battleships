@@ -106,9 +106,8 @@ public class Ship
     {
         for (ShipPart shippart : this.shipparts)
         {
-            if (shippart.getxCoordinate() == x && shippart.getyCoordinate() == y)
+            if (shippart.isShipPartWithCoordinateDestroyed(x, y))
             {
-                shippart.destroy();
                 return true;
             }
         }

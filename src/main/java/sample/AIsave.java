@@ -2,17 +2,17 @@ package sample;
 
 public class AIsave
 {
-    private int x,y;
+    private Position position;
     private Direction direction;
 
     public int getX()
     {
-        return x;
+        return position.getX();
     }
 
     public int getY()
     {
-        return y;
+        return position.getY();
     }
 
     public Direction getDirection()
@@ -25,17 +25,15 @@ public class AIsave
         this.direction = direction;
     }
 
-    public AIsave(int x, int y)
+    public AIsave(Position position)
     {
-        this.x = x;
-        this.y = y;
+        this.position = position;
         direction=null;
     }
 
-    public AIsave(int x, int y, Direction direction )
+    public AIsave(Position position, Direction direction )
     {
-        this.x = x;
-        this.y = y;
+        this.position = position;
         this.direction = direction;
     }
 }

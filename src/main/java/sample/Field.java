@@ -110,34 +110,29 @@ public class Field
 
     /*Zuerst überprüfen wir, ob die Anzahl der Schiffe, mit der Länge die wir gerade setzen wollen, nicht eh schon
     erfüllt ist. Wenn schon, return false und brich ab.*/
-        switch (length)
+        if (length <= 1 || length >= 6)
         {
-            case 2:
-                if (this.getShipsWithLength(length) >= 4)
-                {
-                    return false;
-                }
-                break;
-            case 3:
-                if (this.getShipsWithLength(length) >= 3)
-                {
-                    return false;
-                }
-                break;
-            case 4:
-                if (this.getShipsWithLength(length) >= 2)
-                {
-                    return false;
-                }
-                break;
-            case 5:
-                if (this.getShipsWithLength(length) >= 1)
-                {
-                    return false;
-                }
-                break;
-            default:
-                return false;
+            return false;
+        }
+
+        if (length == 2 && this.getShipsWithLength(2) >= 4)
+        {
+            return false;
+        }
+
+        if (length == 3 && this.getShipsWithLength(3) >= 3)
+        {
+            return false;
+        }
+
+        if (length == 4 && this.getShipsWithLength(4) >= 2)
+        {
+            return false;
+        }
+
+        if (length == 5 && this.getShipsWithLength(5) >= 1)
+        {
+            return false;
         }
 
         /*Switch hat nirgends false zurück geliefert, wir landen hier. wir überprüfen mit der isAreaFree Methode, ob
@@ -148,10 +143,9 @@ public class Field
         {
             this.fleet.add(new Ship(new Position(x,y), length, dire, diffvectorx, diffvectory));
             return true;
-        } else
-        {
-            return false;
         }
+
+        return false;
     }
 
     /*Es überprüft für jedes Schiff der Flotte (ArrayList mit Schiffen) ob die x,y Koordinaten zutreffen. Wenn ja,
@@ -202,7 +196,7 @@ Schiff zutreffen und checkIfDestroyed (Ship-Klasse) true liefert, returned es da
 
     /*Verwendung: reset Methode in der Main. Wenn reset aufgerufen wird, wird removeAll aktiviert, bedeutet, dass wir
     eine neue ArrayList fleet erstellen (die alte wird gelöscht quasi).*/
-    public void removeAll()
+    public void removeAllShips()
     {
         this.fleet = new ArrayList<Ship>(0);
     }

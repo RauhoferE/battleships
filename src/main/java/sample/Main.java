@@ -621,8 +621,8 @@ public class Main extends Application
             imageShip1[i].reset();
 
         }
-        player1.area.removeAll();
-        player2.area.removeAll();
+        player1.area.removeAllShips();
+        player2.area.removeAllShips();
         player1.ResetAttackPositions();
         player2.ResetAttackPositions();
         gameround = 1;

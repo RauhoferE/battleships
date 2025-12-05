@@ -76,7 +76,7 @@ public class Field
     /*Es zählt wie viele Schiffe es in der Länge schon gibt, in der wir gerade anlegen wollen. Nimmt hier aber noch
     keine Rücksicht darauf, ob es schon 4 in der Länge 2 z.B schon gibt. Das passiert erst in der setShip Methode bzw
     . isFleetComplete. */
-    private int shipCount(int length)
+    private int getShipsWithLength(int length)
     {
         int count = 0;
         for (Ship warship : this.fleet)
@@ -93,7 +93,16 @@ public class Field
      shipCount für alle(!!) Schiffslängen die richtige Anzahl gezählt hat (z.B für length 2 ==4(Schiff)), dann true.*/
     public boolean isFleetComplete()
     {
-        return ((this.shipCount(2) == 4 && this.shipCount(3) == 3 && this.shipCount(4) == 2 && this.shipCount(5) == 1));//es gibt 4 2er ,3 3er  ,2 4er und 1 5er
+        return (
+                containsShipsWithLength(4,2) &&
+                        containsShipsWithLength(3,3) &&
+                       containsShipsWithLength(2,4) &&
+                        containsShipsWithLength(1, 5)
+        );//es gibt 4 2er ,3 3er  ,2 4er und 1 5er
+    }
+
+    private boolean containsShipsWithLength(int shipNumber, int length) {
+        return this.getShipsWithLength(length) == shipNumber;
     }
 
     public boolean setShip(int x, int y, int length, Direction dire, int diffvectorx, int diffvectory)
@@ -104,25 +113,25 @@ public class Field
         switch (length)
         {
             case 2:
-                if (this.shipCount(length) >= 4)
+                if (this.getShipsWithLength(length) >= 4)
                 {
                     return false;
                 }
                 break;
             case 3:
-                if (this.shipCount(length) >= 3)
+                if (this.getShipsWithLength(length) >= 3)
                 {
                     return false;
                 }
                 break;
             case 4:
-                if (this.shipCount(length) >= 2)
+                if (this.getShipsWithLength(length) >= 2)
                 {
                     return false;
                 }
                 break;
             case 5:
-                if (this.shipCount(length) >= 1)
+                if (this.getShipsWithLength(length) >= 1)
                 {
                     return false;
                 }

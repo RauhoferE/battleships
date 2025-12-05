@@ -103,7 +103,7 @@ public class Ship
     {
         for (ShipPart shippart : this.shipparts)
         {
-            if (shippart.getX() == x && shippart.getY() == y)
+            if (shippart.getxCoordinate() == x && shippart.getyCoordinate() == y)
             {
                 shippart.destroy();
                 return true;

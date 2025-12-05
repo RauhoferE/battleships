@@ -5,40 +5,40 @@ public class ShipPart
     /*Jeder Teil vom Schiff (in unserem Fall ist jeder Teil genau 40pixel lang) hat die Eigenschaften von der Klasse
     ShipPart*/
 
-    private int x;
-    private int y;
-    private boolean damage;
+    private int xCoordinate;
+    private int yCoordinate;
+    private boolean receivedDamage;
 
-    public int getX()
+    public int getxCoordinate()
     {
-        return x;
+        return xCoordinate;
     }
 
-    public int getY()
+    public int getyCoordinate()
     {
-        return y;
+        return yCoordinate;
     }
 
-    public ShipPart(int x, int y)
+    public ShipPart(int xCoordinate, int yCoordinate)
     {
-        this.x = x;
-        this.y = y;
-        this.damage = false;
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
+        this.receivedDamage = false;
 
         /*Dient der Ausgabe für uns, zum testen*/
-        System.out.println(" schiffteil an X= " + this.x + " Y =" + this.y + " schaden= " + this.damage);
+        System.out.println(" schiffteil an X= " + this.xCoordinate + " Y =" + this.yCoordinate + " schaden= " + this.receivedDamage);
     }
 
     /*ist dieser Teil vom Schiff zerstört?*/
     public boolean isDamaged()
     {
-        return damage;
+        return receivedDamage;
     }
 
     /*Wird in der Ship klasse, in der attack Methode aufgerufen!*/
     public void destroy()
     {
-        this.damage = true;
+        this.receivedDamage = true;
     }
 
 }

@@ -19,7 +19,7 @@ public class Field
         {
             for (ShipPart part : warship.getShipParts())
             {
-                if (part.getX() == x && part.getY() == y)
+                if (part.getxCoordinate() == x && part.getyCoordinate() == y)
                 {
                     return false;
                 }
@@ -169,7 +169,7 @@ Schiff zutreffen und checkIfDestroyed (Ship-Klasse) true liefert, returned es da
         {
             for (ShipPart part : warship.getShipParts())
             {
-                if (part.getX() == x && part.getY() == y && warship.checkIfDestroyed())
+                if (part.getxCoordinate() == x && part.getyCoordinate() == y && warship.checkIfDestroyed())
                 {
                     return warship;
                 }

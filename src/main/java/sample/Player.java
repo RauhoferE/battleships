@@ -10,18 +10,18 @@ public class Player
     private ArrayList<Position> attackpositions = new ArrayList<>();
 
     /*SaveAttack speichert alle Attacken in die Arraylist*/
-    public void SaveAttack(int x, int y)
+    public void SaveAttackOnPosition(int x, int y)
     {
         this.attackpositions.add(new Position(x, y));
     }
 
     /*Wir verhindern doppelten Angriff. Wir schauen, mit der foreach Schleife, ob die Übergebenen x,y von attackPossible
     schon in einer der gespeicherten Stellen in unserer ArrayList attackpositions enthalten ist.*/
-    boolean attackPossible(int x, int y)
+    boolean isAttackPossibleOn(Position position)
     {
-        for (Position a : this.attackpositions)
+        for (Position attackPosition : this.attackpositions)
         {
-            if ((a.getX() == x) && (a.getY() == y))
+            if (attackPosition.arePositionsEqual(position))
             {
                 return false;
             }
@@ -30,7 +30,7 @@ public class Player
     }
 
     /*Reset überschreibt unsere Klassenarraylist, die wir oben erstellt haben, mit einer Leeren Arraylist --> Resetet es*/
-    public void Reset()
+    public void ResetAttackPositions()
     {
         this.attackpositions = new ArrayList<>();
     }

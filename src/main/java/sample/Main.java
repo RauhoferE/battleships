@@ -422,12 +422,12 @@ public class Main extends Application
 
                     if (a != null)
                     {
-                        if (player1.attackPossible(a[0], a[1]))
+                        if (player1.isAttackPossibleOn(new Position(a[0], a[1])))
                         {
                             if (player2.area.attack(a[0], a[1]))
                             {
                                 drawAttack(a[0], a[1], x, y, player2);
-                                player1.SaveAttack(a[0], a[1]);
+                                player1.SaveAttackOnPosition(a[0], a[1]);
                                 activateMask();
                                 bombplay.stop();
                                 bombplay.play();
@@ -435,7 +435,7 @@ public class Main extends Application
                             } else
                             {
                                 drawMiss(x, y);
-                                player1.SaveAttack(a[0], a[1]);
+                                player1.SaveAttackOnPosition(a[0], a[1]);
                                 activateMask();
                                 indicate1.setVisible(false);
                                 indicate2.setVisible(true);
@@ -467,12 +467,12 @@ public class Main extends Application
                     a = calculateXY(x, y, 440 + 40 + 10 * 40 + 2 * 40, 40 + 40, 440 + 440 + 440 + 40, 440 + 40);
                     if (a != null)
                     {
-                        if (player2.attackPossible(a[0], a[1]))
+                        if (player2.isAttackPossibleOn(new Position(a[0], a[1])))
                         {
                             if (player1.area.attack(a[0], a[1]))
                             {
                                 drawAttack(a[0], a[1], x, y, player1);
-                                player2.SaveAttack(a[0], a[1]);
+                                player2.SaveAttackOnPosition(a[0], a[1]);
                                 activateMask();
                                 bombplay.stop();
                                 bombplay.play();
@@ -480,7 +480,7 @@ public class Main extends Application
                             } else
                             {
                                 drawMiss(x, y);
-                                player2.SaveAttack(a[0], a[1]);
+                                player2.SaveAttackOnPosition(a[0], a[1]);
                                 activateMask();
                                 indicate1.setVisible(true);
                                 indicate2.setVisible(false);
@@ -623,8 +623,8 @@ public class Main extends Application
         }
         player1.area.removeAll();
         player2.area.removeAll();
-        player1.Reset();
-        player2.Reset();
+        player1.ResetAttackPositions();
+        player2.ResetAttackPositions();
         gameround = 1;
         shipscomplete = false;
         buttonSaveShipsRight.setVisible(true);

@@ -283,26 +283,26 @@ public class UIManager {
     public void setupEventHandlers(Stage primaryStage) {
         reset.setOnAction(event -> {
             resetGame();
-            Scene scene = new Scene(battleshipContainer, GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            refreshScene(primaryStage);
         });
         
         newGame.setOnAction(event -> {
             resetGame();
             hideMainMenuButtons();  // Hide menu buttons when starting game
-            Scene scene = new Scene(battleshipContainer, GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            refreshScene(primaryStage);
         });
         
         cont.setOnAction(event -> {
             resetGame();
             showMainMenuButtons();  // Show menu buttons when returning to main menu
-            Scene scene = new Scene(battleshipContainer, GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            refreshScene(primaryStage);
         });
+    }
+    
+    private void refreshScene(Stage primaryStage) {
+        Scene scene = new Scene(battleshipContainer, GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
     
     private void resetGame() {

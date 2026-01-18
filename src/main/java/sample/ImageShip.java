@@ -96,97 +96,92 @@ public class ImageShip
     }
 
 
-    /*Konstruktor, mit dem wir die Schiffe in der Main (großer Block am Anfang) erstellen. Jedes Schiff hat die
-    Eigenschaften und Funktionen, die hier drinnen stehen. z.B Es sind alle Schiffe automatisch nach rechts
-    orientiert.*/
     public ImageShip(int x, int y, int length, Image image)
     {
         this.x = x;
         this.y = y;
         this.beginX = this.x;
         this.beginY = this.y;
-        //System.out.println("x= " + x + "y= " + y);
         this.length = length;
         this.image = image;
         this.direction = Direction.RIGHT;
-
 
         this.imageView = new ImageView(image);
         imageView.setX(this.x);
         imageView.setY(this.y);
         this.setDiffvectorx(0);
         this.setDiffvectory(0);
-        // System.out.println("x= " + this.x + "y= " + this.y);
 
+        setupMouseEventHandler();
+    }
 
+    private void setupMouseEventHandler() {
         imageView.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>()
         {
             @Override
             public void handle(MouseEvent event)
             {
-                //Nur wenn Schiff lock==false (unten bei lock erklärt)
-                if (!disable)
-                {
-                    if (event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton().equals(MouseButton.PRIMARY))
-                    {
-                        //Koordinaten vom Mouseclick
-                        startX = event.getSceneX();
-                        startY = event.getSceneY();
-
-                        //Koordinaten vom Bild was geklickt wurde (schätze ich, bitte noch bestätigen!)
-                        moveX = ((ImageView) (event.getSource())).getTranslateX();
-                        moveY = ((ImageView) (event.getSource())).getTranslateY();
-
-                    }
-                    if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && event.getButton().equals(MouseButton.PRIMARY))
-                    {
-                        //Differenz der Koordinaten von der Maus, wo wir losgelassen haben und angefangen haben
-                        setX = event.getSceneX() - startX;
-                        setY = event.getSceneY() - startY;
-
-                        //Die Differenz zwischen Bild Anfang und wie weit die maus gedragged wurde
-                        newX = moveX + setX;
-                        newY = moveY + setY;
-
-                        /*wir runden es, damit es durch 40 teilbar ist (weil alle Felder durch 40 teilbar sind)*/
-                        int diffx = (int) newX % 40;
-                        newX = newX - diffx;
-
-                        int diffy = (int) newY % 40;
-                        newY = newY - diffy;
-
-
-                        ((ImageView) (event.getSource())).setTranslateX(newX);
-                        ((ImageView) (event.getSource())).setTranslateY(newY);
-
-                        /*Alle Faktoren werden berücksichtigt, damit die neuen Koordinaten stimmen, muss auch die
-                        errechnete differenz vom rotieren mit einbezogen werden.*/
-                        setX(beginX + getDiffvectorx() + (int) newX);
-                        setY(beginY + getDiffvectory() + (int) newY);
-
-
-                        int a[] = calculateXY(getX(), getY(), 440 + 40, 40 + 440 + 40 + 40, 440 + 440, 40 + 920);
-                        if (a != null)
-                        {
-                            System.out.println("x= " + (a[0] + 1) + "y= " + (a[1] + 1));
-                        }
-                    }
-                    if (event.getEventType() == MouseEvent.MOUSE_CLICKED && event.getButton().equals(MouseButton.SECONDARY))
-                    {
-                        /*
-                        System.out.println("echt x= " + getX() + "y= " + getY());
-                        int a[] = calculateXY(getX(), getY(), 440 + 40, 40 + 440 + 40 + 40, 440 + 440, 40 + 920);
-                        if (a != null)
-                        {
-                            System.out.println("x= " + (a[0] + 1) + "y= " + (a[1] + 1));
-                        }
-                        */
-
-                        rotate();
-                    }
+                if (!disable) {
+                    handleMouseEvent(event);
                 }
             }
         });
+    }
+    
+    private void handleMouseEvent(MouseEvent event) {
+        if (event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton().equals(MouseButton.PRIMARY)) {
+            handleMousePressed(event);
+        } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && event.getButton().equals(MouseButton.PRIMARY)) {
+            handleMouseDragged(event);
+        } else if (event.getEventType() == MouseEvent.MOUSE_CLICKED && event.getButton().equals(MouseButton.SECONDARY)) {
+            rotate();
+        }
+    }
+    
+    private void handleMousePressed(MouseEvent event) {
+        startX = event.getSceneX();
+        startY = event.getSceneY();
+        moveX = ((ImageView) (event.getSource())).getTranslateX();
+        moveY = ((ImageView) (event.getSource())).getTranslateY();
+    }
+    
+    private void handleMouseDragged(MouseEvent event) {
+        calculateNewPosition(event);
+        snapToGrid();
+        updateImagePosition(event);
+        updateShipCoordinates();
+        logCoordinatesIfInBounds();
+    }
+    
+    private void calculateNewPosition(MouseEvent event) {
+        setX = event.getSceneX() - startX;
+        setY = event.getSceneY() - startY;
+        newX = moveX + setX;
+        newY = moveY + setY;
+    }
+    
+    private void snapToGrid() {
+        int diffx = (int) newX % GameConstants.GRID_SIZE;
+        newX = newX - diffx;
+        int diffy = (int) newY % GameConstants.GRID_SIZE;
+        newY = newY - diffy;
+    }
+    
+    private void updateImagePosition(MouseEvent event) {
+        ((ImageView) (event.getSource())).setTranslateX(newX);
+        ((ImageView) (event.getSource())).setTranslateY(newY);
+    }
+    
+    private void updateShipCoordinates() {
+        setX(beginX + getDiffvectorx() + (int) newX);
+        setY(beginY + getDiffvectory() + (int) newY);
+    }
+    
+    private void logCoordinatesIfInBounds() {
+        int a[] = calculateXY(getX(), getY(), 440 + 40, 40 + 440 + 40 + 40, 440 + 440, 40 + 920);
+        if (a != null) {
+            System.out.println("x= " + (a[0] + 1) + "y= " + (a[1] + 1));
+        }
     }
 
     /*Gelocked wird, wenn saveShips in der main ein Schiff gespeichert wird oder wenn ein zerstörtes Schiff

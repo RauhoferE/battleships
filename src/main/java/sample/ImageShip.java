@@ -96,97 +96,92 @@ public class ImageShip
     }
 
 
-    /*Konstruktor, mit dem wir die Schiffe in der Main (großer Block am Anfang) erstellen. Jedes Schiff hat die
-    Eigenschaften und Funktionen, die hier drinnen stehen. z.B Es sind alle Schiffe automatisch nach rechts
-    orientiert.*/
     public ImageShip(int x, int y, int length, Image image)
     {
         this.x = x;
         this.y = y;
         this.beginX = this.x;
         this.beginY = this.y;
-        //System.out.println("x= " + x + "y= " + y);
         this.length = length;
         this.image = image;
         this.direction = Direction.RIGHT;
-
 
         this.imageView = new ImageView(image);
         imageView.setX(this.x);
         imageView.setY(this.y);
         this.setDiffvectorx(0);
         this.setDiffvectory(0);
-        // System.out.println("x= " + this.x + "y= " + this.y);
 
+        setupMouseEventHandler();
+    }
 
+    private void setupMouseEventHandler() {
         imageView.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>()
         {
             @Override
             public void handle(MouseEvent event)
             {
-                //Nur wenn Schiff lock==false (unten bei lock erklärt)
-                if (!disable)
-                {
-                    if (event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton().equals(MouseButton.PRIMARY))
-                    {
-                        //Koordinaten vom Mouseclick
-                        startX = event.getSceneX();
-                        startY = event.getSceneY();
-
-                        //Koordinaten vom Bild was geklickt wurde (schätze ich, bitte noch bestätigen!)
-                        moveX = ((ImageView) (event.getSource())).getTranslateX();
-                        moveY = ((ImageView) (event.getSource())).getTranslateY();
-
-                    }
-                    if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && event.getButton().equals(MouseButton.PRIMARY))
-                    {
-                        //Differenz der Koordinaten von der Maus, wo wir losgelassen haben und angefangen haben
-                        setX = event.getSceneX() - startX;
-                        setY = event.getSceneY() - startY;
-
-                        //Die Differenz zwischen Bild Anfang und wie weit die maus gedragged wurde
-                        newX = moveX + setX;
-                        newY = moveY + setY;
-
-                        /*wir runden es, damit es durch 40 teilbar ist (weil alle Felder durch 40 teilbar sind)*/
-                        int diffx = (int) newX % 40;
-                        newX = newX - diffx;
-
-                        int diffy = (int) newY % 40;
-                        newY = newY - diffy;
-
-
-                        ((ImageView) (event.getSource())).setTranslateX(newX);
-                        ((ImageView) (event.getSource())).setTranslateY(newY);
-
-                        /*Alle Faktoren werden berücksichtigt, damit die neuen Koordinaten stimmen, muss auch die
-                        errechnete differenz vom rotieren mit einbezogen werden.*/
-                        setX(beginX + getDiffvectorx() + (int) newX);
-                        setY(beginY + getDiffvectory() + (int) newY);
-
-
-                        int a[] = calculateXY(getX(), getY(), 440 + 40, 40 + 440 + 40 + 40, 440 + 440, 40 + 920);
-                        if (a != null)
-                        {
-                            System.out.println("x= " + (a[0] + 1) + "y= " + (a[1] + 1));
-                        }
-                    }
-                    if (event.getEventType() == MouseEvent.MOUSE_CLICKED && event.getButton().equals(MouseButton.SECONDARY))
-                    {
-                        /*
-                        System.out.println("echt x= " + getX() + "y= " + getY());
-                        int a[] = calculateXY(getX(), getY(), 440 + 40, 40 + 440 + 40 + 40, 440 + 440, 40 + 920);
-                        if (a != null)
-                        {
-                            System.out.println("x= " + (a[0] + 1) + "y= " + (a[1] + 1));
-                        }
-                        */
-
-                        rotate();
-                    }
+                if (!disable) {
+                    handleMouseEvent(event);
                 }
             }
         });
+    }
+    
+    private void handleMouseEvent(MouseEvent event) {
+        if (event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton().equals(MouseButton.PRIMARY)) {
+            handleMousePressed(event);
+        } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && event.getButton().equals(MouseButton.PRIMARY)) {
+            handleMouseDragged(event);
+        } else if (event.getEventType() == MouseEvent.MOUSE_CLICKED && event.getButton().equals(MouseButton.SECONDARY)) {
+            rotate();
+        }
+    }
+    
+    private void handleMousePressed(MouseEvent event) {
+        startX = event.getSceneX();
+        startY = event.getSceneY();
+        moveX = ((ImageView) (event.getSource())).getTranslateX();
+        moveY = ((ImageView) (event.getSource())).getTranslateY();
+    }
+    
+    private void handleMouseDragged(MouseEvent event) {
+        calculateNewPosition(event);
+        snapToGrid();
+        updateImagePosition(event);
+        updateShipCoordinates();
+        logCoordinatesIfInBounds();
+    }
+    
+    private void calculateNewPosition(MouseEvent event) {
+        setX = event.getSceneX() - startX;
+        setY = event.getSceneY() - startY;
+        newX = moveX + setX;
+        newY = moveY + setY;
+    }
+    
+    private void snapToGrid() {
+        int diffx = (int) newX % GameConstants.GRID_SIZE;
+        newX = newX - diffx;
+        int diffy = (int) newY % GameConstants.GRID_SIZE;
+        newY = newY - diffy;
+    }
+    
+    private void updateImagePosition(MouseEvent event) {
+        ((ImageView) (event.getSource())).setTranslateX(newX);
+        ((ImageView) (event.getSource())).setTranslateY(newY);
+    }
+    
+    private void updateShipCoordinates() {
+        setX(beginX + getDiffvectorx() + (int) newX);
+        setY(beginY + getDiffvectory() + (int) newY);
+    }
+    
+    private void logCoordinatesIfInBounds() {
+        int a[] = calculateXY(getX(), getY(), 440 + 40, 40 + 440 + 40 + 40, 440 + 440, 40 + 920);
+        if (a != null) {
+            System.out.println("x= " + (a[0] + 1) + "y= " + (a[1] + 1));
+        }
     }
 
     /*Gelocked wird, wenn saveShips in der main ein Schiff gespeichert wird oder wenn ein zerstörtes Schiff
@@ -224,164 +219,158 @@ public class ImageShip
     //rotiert das Bild und das im code angelegte Schiff
     private void rotate()
     {
+        rotateImageView();
+        updateDirectionAndPosition();
+        logCoordinates();
+    }
 
-                        /*
-                        System.out.println("echt x= " + getX() + "y= " + getY());
-                        int a[] = calculateXY(getX(), getY(), 440 + 40, 40 + 440 + 40 + 40, 440 + 440, 40 + 920);
-                        if (a != null)
-                        {
-                            System.out.println("x= " + (a[0] + 1) + "y= " + (a[1] + 1));
-                        }
-                        */
-
-        /*Die rotate Methode rotiert immer um die Mitte eines Objektes. Das ist ein Problem bei Geraden
-         Schiffen weil sie nach dem Rotieren zwischen zwei Feldern liegen würden. Hier verhindern wir
-         das, durch Differezenaufsummierung, je nachdem wie oft gedreht wurde.*/
+    private void rotateImageView()
+    {
         if (getLength() % 2 == 1)
         {
-            double value = imageView.getRotate();
-            imageView.setRotate(value - 90);
-        } else
+            rotateOddLengthShip();
+        }
+        else
         {
-            /*rotate: Je nachdem welcher Wert rotate hat, muss man addieren oder subtrahieren (kommt
-             drauf an wie oft man geklickt hat),*/
-            if (rotate % 2 == 1)
-            {
-                double value = imageView.getRotate();
-                imageView.setRotate(value - 90);
-                imageView.setX(imageView.getX() + 20);
-                imageView.setY(imageView.getY() - 20);
-            } else
-            {
-                double value = imageView.getRotate();
-                imageView.setRotate(value - 90);
-                imageView.setX(imageView.getX() - 20);
-                imageView.setY(imageView.getY() + 20);
-            }
+            rotateEvenLengthShip();
         }
         rotate++;
+    }
 
-         /*Switch ist dafür da, um die Bilder die wir drehen und die ImageShips ("Digital angelegte
-          Schiffe" die wir erstellen, nach dem Rotieren abzugleichen. Weil nur weil wir das Bild drehen,
-          heißt es ja nicht, dass sich unsere ImageShips mitdrehen. Sind ja zwei verschiedene
-          Entitäten. Immer Abhängig von welcher Richtung man dreht, ändern wir manuell dann die
-          Direction mit den dementsprechenden Rechungen auch um.*/
+    private void rotateOddLengthShip()
+    {
+        double value = imageView.getRotate();
+        imageView.setRotate(value - 90);
+    }
+
+    private void rotateEvenLengthShip()
+    {
+        double value = imageView.getRotate();
+        imageView.setRotate(value - 90);
+        
+        if (rotate % 2 == 1)
+        {
+            imageView.setX(imageView.getX() + 20);
+            imageView.setY(imageView.getY() - 20);
+        }
+        else
+        {
+            imageView.setX(imageView.getX() - 20);
+            imageView.setY(imageView.getY() + 20);
+        }
+    }
+
+    private void updateDirectionAndPosition()
+    {
         switch (direction)
         {
             case UP:
-                direction = Direction.LEFT;
-                if (getLength() % 2 == 1)
-                {
-                    setX(getX() + 40 * (getLength() / 2));
-                    setY(getY() - 40 * (getLength() / 2));
-
-                    setDiffvectorx(getDiffvectorx() + 40 * (getLength() / 2));
-                    setDiffvectory(getDiffvectory() - 40 * (getLength() / 2));
-                } else
-                {
-                    if (getLength() == 2)
-                    {
-                    } else
-                    {
-                        setX(getX() + 40);
-                        setY(getY() - 40);
-
-                        setDiffvectorx(getDiffvectorx() + 40);
-                        setDiffvectory(getDiffvectory() - 40);
-                    }
-                }
+                updateFromUpDirection();
                 break;
             case DOWN:
-                direction = Direction.RIGHT;
-                if (getLength() % 2 == 1)
-                {
-                    setX(getX() - 40 * (getLength() / 2));
-                    setY(getY() + 40 * (getLength() / 2));
-
-                    setDiffvectorx(getDiffvectorx() - 40 * (getLength() / 2));
-                    setDiffvectory(getDiffvectory() + 40 * (getLength() / 2));
-                } else
-                {
-                    if (getLength() == 2)
-                    {
-                        setX(getX() - 40);
-                        setY(getY() + 40);
-
-                        setDiffvectorx(getDiffvectorx() - 40);
-                        setDiffvectory(getDiffvectory() + 40);
-
-                    } else
-                    {
-                        setX(getX() - 2 * 40);
-                        setY(getY() + 2 * 40);
-
-                        setDiffvectorx(getDiffvectorx() - 40 * 2);
-                        setDiffvectory(getDiffvectory() + 40 * 2);
-                    }
-                }
+                updateFromDownDirection();
                 break;
             case LEFT:
-                direction = Direction.DOWN;
-                if (getLength() % 2 == 1)
-                {
-                    setX(getX() - 40 * (getLength() / 2));
-                    setY(getY() - 40 * (getLength() / 2));
-
-                    setDiffvectorx(getDiffvectorx() - 40 * (getLength() / 2));
-                    setDiffvectory(getDiffvectory() - 40 * (getLength() / 2));
-                } else
-                {
-                    if (getLength() == 2)
-                    {
-                        setY(getY() - 40);
-
-                        setDiffvectory(getDiffvectory() - 40);
-                    } else
-                    {
-                        setX(getX() - 40);
-                        setY(getY() - 2 * 40);
-
-                        setDiffvectorx(getDiffvectorx() - 40);
-                        setDiffvectory(getDiffvectory() - 40 * 2);
-                    }
-                }
+                updateFromLeftDirection();
                 break;
             case RIGHT:
-                direction = Direction.UP;
-                if (getLength() % 2 == 1)
-                {
-                    setX(getX() + 40 * (getLength() / 2));
-                    setY(getY() + 40 * (getLength() / 2));
-
-                    setDiffvectorx(getDiffvectorx() + 40 * (getLength() / 2));
-                    setDiffvectory(getDiffvectory() + 40 * (getLength() / 2));
-
-                } else
-                {
-                    if (getLength() == 2)
-                    {
-                        setX(getX() + 40);
-
-                        setDiffvectorx(getDiffvectorx() + 40);
-
-                    } else
-                    {
-                        setX(getX() + 2 * 40);
-                        setY(getY() + 40);
-
-                        setDiffvectorx(getDiffvectorx() + 2 * 40);
-                        setDiffvectory(getDiffvectory() + 40);
-                    }
-                }
+                updateFromRightDirection();
                 break;
         }
+    }
+
+    private void updateFromUpDirection()
+    {
+        direction = Direction.LEFT;
+        if (getLength() % 2 == 1)
+        {
+            int offset = 40 * (getLength() / 2);
+            adjustPosition(offset, -offset);
+        }
+        else if (getLength() != 2)
+        {
+            adjustPosition(40, -40);
+        }
+    }
+
+    private void updateFromDownDirection()
+    {
+        direction = Direction.RIGHT;
+        if (getLength() % 2 == 1)
+        {
+            int offset = 40 * (getLength() / 2);
+            adjustPosition(-offset, offset);
+        }
+        else
+        {
+            if (getLength() == 2)
+            {
+                adjustPosition(-40, 40);
+            }
+            else
+            {
+                adjustPosition(-80, 80);
+            }
+        }
+    }
+
+    private void updateFromLeftDirection()
+    {
+        direction = Direction.DOWN;
+        if (getLength() % 2 == 1)
+        {
+            int offset = 40 * (getLength() / 2);
+            adjustPosition(-offset, -offset);
+        }
+        else
+        {
+            if (getLength() == 2)
+            {
+                adjustPosition(0, -40);
+            }
+            else
+            {
+                adjustPosition(-40, -80);
+            }
+        }
+    }
+
+    private void updateFromRightDirection()
+    {
+        direction = Direction.UP;
+        if (getLength() % 2 == 1)
+        {
+            int offset = 40 * (getLength() / 2);
+            adjustPosition(offset, offset);
+        }
+        else
+        {
+            if (getLength() == 2)
+            {
+                adjustPosition(40, 0);
+            }
+            else
+            {
+                adjustPosition(80, 40);
+            }
+        }
+    }
+
+    private void adjustPosition(int deltaX, int deltaY)
+    {
+        setX(getX() + deltaX);
+        setY(getY() + deltaY);
+        setDiffvectorx(getDiffvectorx() + deltaX);
+        setDiffvectory(getDiffvectory() + deltaY);
+    }
+
+    private void logCoordinates()
+    {
         int[] a = calculateXY(getX(), getY(), 440 + 40, 40 + 440 + 40 + 40, 440 + 440, 40 + 920);
         if (a != null)
         {
             System.out.println("x= " + (a[0] + 1) + "y= " + (a[1] + 1));
         }
-
-
     }
 
 

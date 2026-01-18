@@ -107,38 +107,14 @@ public class Field
 
     public boolean setShip(int x, int y, int length, Direction dire, int diffvectorx, int diffvectory)
     {
-
-    /*Zuerst überprüfen wir, ob die Anzahl der Schiffe, mit der Länge die wir gerade setzen wollen, nicht eh schon
-    erfüllt ist. Wenn schon, return false und brich ab.*/
-        if (length <= 1 || length >= 6)
-        {
+        if (!isValidShipLength(length)) {
+            return false;
+        }
+        
+        if (!canAddMoreShipsOfLength(length)) {
             return false;
         }
 
-        if (length == 2 && this.getShipsWithLength(2) >= 4)
-        {
-            return false;
-        }
-
-        if (length == 3 && this.getShipsWithLength(3) >= 3)
-        {
-            return false;
-        }
-
-        if (length == 4 && this.getShipsWithLength(4) >= 2)
-        {
-            return false;
-        }
-
-        if (length == 5 && this.getShipsWithLength(5) >= 1)
-        {
-            return false;
-        }
-
-        /*Switch hat nirgends false zurück geliefert, wir landen hier. wir überprüfen mit der isAreaFree Methode, ob
-        wir am gewünschten Ort setzen dürfen. Wie?(steht oben beschrieben). Falls true, adden wir ein Objekt der
-        Klasse Ship (also ein Schiff) zu unserer ArrayList fleet mittels dem Konstruktor der Klasse Ship. Wieso
-        diffvectorx und y? Das steht in der main bei der Methode saveShips dabei.*/
         if (isAreaFree(x, y, length, dire))
         {
             this.fleet.add(new Ship(new Position(x,y), length, dire, diffvectorx, diffvectory));
@@ -146,6 +122,25 @@ public class Field
         }
 
         return false;
+    }
+    
+    private boolean isValidShipLength(int length) {
+        return length > 1 && length < 6;
+    }
+    
+    private boolean canAddMoreShipsOfLength(int length) {
+        switch (length) {
+            case 2:
+                return this.getShipsWithLength(2) < 4;
+            case 3:
+                return this.getShipsWithLength(3) < 3;
+            case 4:
+                return this.getShipsWithLength(4) < 2;
+            case 5:
+                return this.getShipsWithLength(5) < 1;
+            default:
+                return false;
+        }
     }
 
     /*Es überprüft für jedes Schiff der Flotte (ArrayList mit Schiffen) ob die x,y Koordinaten zutreffen. Wenn ja,
